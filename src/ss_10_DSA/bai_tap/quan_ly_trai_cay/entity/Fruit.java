@@ -1,6 +1,7 @@
 package ss_10_DSA.bai_tap.quan_ly_trai_cay.entity;
 
 public class Fruit {
+    int id;
     private String fruitName;
     private String fruitType;
     private String productionDate;
@@ -11,8 +12,9 @@ public class Fruit {
     public Fruit() {
     }
 
-    public Fruit(String fruitName, String fruitType, String productionDate,
+    public Fruit(int id,String fruitName, String fruitType, String productionDate,
                  String expiry, String origin, double price) {
+        this.id = id;
         this.fruitName = fruitName;
         this.fruitType = fruitType;
         this.productionDate = productionDate;
@@ -69,10 +71,24 @@ public class Fruit {
         this.price = price;
     }
 
-    @Override
-    public String toString() {
-        return String.format("| %-15s | %-12s | %-12s | %-12s | %-15s | %10s |",
-                fruitName, fruitType, productionDate, expiry, origin, price);
+    public int getId() {
+        return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Fruit{" +
+                "id=" + id +
+                ", fruitName='" + fruitName + '\'' +
+                ", fruitType='" + fruitType + '\'' +
+                ", productionDate='" + productionDate + '\'' +
+                ", expiry='" + expiry + '\'' +
+                ", origin='" + origin + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }

@@ -8,4 +8,13 @@ public interface IFruitService {
     List<Fruit> findAll();
 
     void add(Fruit fruit);
+
+    Fruit findById(int id);
+
+    void remove(int id);
+
+    List<Fruit> findAllByKeySet();
+
+    List<Fruit> findAllByEntrySet();
+
 }

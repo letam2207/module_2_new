@@ -8,4 +8,10 @@ public interface IFruitRepository {
     List<Fruit> findAll();
 
     void add(Fruit fruit);
+
+    Fruit findById(int id);
+
+    void remove(int id);
+
+
 }
