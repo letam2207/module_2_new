@@ -30,7 +30,6 @@ public class FruitRepository implements IFruitRepository {
         return list;
     }
 
-    // Mặc định dùng entrySet
     @Override
     public List<Fruit> findAll() {
         return findAllByEntrySet();
