@@ -1,5 +1,7 @@
 package taskmanager.service;
 
+import taskmanager.common.IdNotFoundException;
+import taskmanager.common.UniqueIDException;
 import taskmanager.entity.Job;
 import taskmanager.repository.IJobRepository;
 import taskmanager.repository.JobRepository;
@@ -16,9 +18,14 @@ public class JobService implements IJobService {
     }
 
     @Override
-    public void add(Job job) {
+    public void add(Job job) throws UniqueIDException {
+        if (checkId(job.getId())) {
+            throw new UniqueIDException("Mã chi tiêu đã tồn tại: " + job.getId());
+        }
         jobRepository.add(job);
     }
+
+
 
     @Override
     public boolean checkId(int id) {
@@ -27,13 +34,18 @@ public class JobService implements IJobService {
 
     @Override
     public Job findById(int id) {
-        return findById(id);
+        return jobRepository.findById(id);
     }
 
+
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id) throws IdNotFoundException {
+        if (!jobRepository.checkId(id)) {
+            throw new IdNotFoundException("Không tìm thấy mã chi tiêu: " + id);
+        }
         return jobRepository.delete(id);
     }
+
 
     @Override
     public void updateById(int id,Job job) {

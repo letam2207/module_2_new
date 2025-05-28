@@ -38,7 +38,7 @@ public static JobService jobService = new JobService();
                     JobView.delete();
                     break;
                 case 4:
-                    update();
+                    JobView.update();
                     break;
                 case 5:
                     JobView.searchId();
@@ -48,7 +48,7 @@ public static JobService jobService = new JobService();
                     break;
                 case 7:
                     ArrayList<Job> jobArrayList = (ArrayList<Job>) jobService.findAll();
-                    jobArrayList.sort((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName())); // Sắp xếp theo tên, không phân biệt hoa thường
+                    jobArrayList.sort((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()));
                     JobView.display(jobArrayList);
 
                     break;
@@ -65,15 +65,6 @@ public static JobService jobService = new JobService();
             }
         } while (check);
     }
-    private static void update() {
-        int id = JobView.inputId();
-        Job job =jobService.findById(id);
-        if (job == null){
-            System.out.println(" Không tìm thấy ID");
-            return;
-        }
-        JobView.update(job);
-        jobService.updateById(id,job);
-    }
+
 
 }

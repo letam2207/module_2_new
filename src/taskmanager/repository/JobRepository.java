@@ -59,19 +59,15 @@ public class JobRepository implements IJobRepository {
     }
 
     @Override
-    public void updateById(int id,Job job) {
-        List<Job> jobs = findAll();
-        for (int i = 0; i < jobs.size(); i++) {
-            if (jobs.get(i).getId() == job.getId()) {
-                jobs.set(i, job);
+    public void updateById(int id, Job job) {
+        for (int i = 0; i < jobList.size(); i++) {
+            if (jobList.get(i).getId() == id) {
+                jobList.set(i, job);
+                return;
             }
         }
-        List<Job> list = new ArrayList<>();
-        for (Job job1 : jobs) {
-            list.add(job1);
-        }
-
     }
+
 
     @Override
     public List<Job> searchId(int id) {
