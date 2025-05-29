@@ -83,12 +83,15 @@ public class JobRepository implements IJobRepository {
     @Override
     public List<Job> searchName(String name) {
         List<Job> jobs = findAll();
-        List<Job> jobList1 = new ArrayList<>();
-        for (int i = 0; i < jobs.size(); i++) {
-            if (jobs.get(i).getName().toUpperCase().contains(name.toLowerCase())) {
-                jobList1.add(jobs.get(i));
+        List<Job> matchedJobs = new ArrayList<>();
+        String searchLower = name.toLowerCase();
+
+        for (Job job : jobs) {
+            if (job.getName().toLowerCase().contains(searchLower)) {
+                matchedJobs.add(job);
             }
         }
-        return jobList1;
+        return matchedJobs;
     }
+
 }

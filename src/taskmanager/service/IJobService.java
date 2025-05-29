@@ -12,7 +12,7 @@ public interface IJobService {
     void add(Job job) throws UniqueIDException;
 
 
-    boolean checkId(int id);
+    boolean  checkId(int id);
 
     Job findById(int id);
     boolean delete(int id) throws IdNotFoundException;

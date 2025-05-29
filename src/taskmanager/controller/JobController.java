@@ -1,6 +1,9 @@
 package taskmanager.controller;
 
+import taskmanager.common.IdNotFoundException;
+import taskmanager.common.UniqueIDException;
 import taskmanager.entity.Job;
+import taskmanager.service.IJobService;
 import taskmanager.service.JobService;
 import taskmanager.view.JobView;
 
@@ -10,7 +13,7 @@ import java.util.Scanner;
 
 public class JobController {
     static Scanner scanner = new Scanner(System.in);
-public static JobService jobService = new JobService();
+public static IJobService jobService = new JobService();
     public static void menu() {
         boolean check = true;
         do {
@@ -32,19 +35,19 @@ public static JobService jobService = new JobService();
                     JobView.display(jobList);
                     break;
                 case 2:
-                    JobView.add();
+                    add();
                     break;
                 case 3:
-                    JobView.delete();
+                    delete();
                     break;
                 case 4:
-                    JobView.update();
+                    update();
                     break;
                 case 5:
-                    JobView.searchId();
+                    searchId();
                     break;
                 case 6:
-                    JobView.searchName();
+                    searchName();
                     break;
                 case 7:
                     ArrayList<Job> jobArrayList = (ArrayList<Job>) jobService.findAll();
@@ -66,5 +69,53 @@ public static JobService jobService = new JobService();
         } while (check);
     }
 
+        private static void add(){
+        Job job = JobView.input();
+            try {
+                jobService.add(job);
+                System.out.println("Thêm thành công!");
+            } catch (UniqueIDException e) {
+                System.out.println("Lỗi: " + e.getMessage());
+            }
+        }
+    public static void delete() {
+        try {
+            int id = JobView.inputId();
+            jobService.delete(id);
+            System.out.println(" Xóa thành công!");
+        } catch (IdNotFoundException e) {
+            System.out.println( e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println(" Vui lòng nhập số nguyên hợp lệ!");
+        }
+    }
+    private  static void update(){
+        int id = JobView.inputId();
+        if (!jobService.checkId(id)) {
+            System.out.println("ID không tồn tại!");
+            return;
+        }
+        Job job = JobView.input();
+        jobService.updateById(id, job);
+        System.out.println("Cập nhật thành công!");
+    }
+    private static void searchName(){
+        String name = JobView.inputName();
+        List<Job> jobList = jobService.searchName(name);
+        if (jobList.isEmpty()){
+            System.out.println("Không tìm thấy mã chi tiêu "+ name);
+        }else {
+            JobView.display(jobList);
+        }
+    }
+    public static void searchId(){
+        int id = JobView.inputId();
+        List<Job> jobList = jobService.searchId(id);
+        if (jobList.isEmpty()){
+            System.out.println("Không tìm thấy mã chi tiêu "+ id);
+        }else {
+            JobView.display(jobList);
+        }
+    }
 
 }

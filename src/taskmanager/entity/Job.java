@@ -63,12 +63,13 @@ public class Job {
 
     @Override
     public String toString() {
-        return "Job{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", date='" + date + '\'' +
-                ", amount=" + amount +
-                ", description='" + description + '\'' +
-                '}';
+        return "----------------------------" +
+                "\n Mã chi tiêu: " + id +
+                "\n Tên chi tiêu: " + name +
+                "\n Ngày chi tiêu: " + date +
+                "\n Số tiền: " + String.format("%,.0f VNĐ", amount) +
+                "\n Mô tả: " + description +
+                "\n----------------------------";
     }
+
 }
