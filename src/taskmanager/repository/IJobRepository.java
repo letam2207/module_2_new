@@ -11,7 +11,7 @@ public interface IJobRepository {
 
     boolean checkId(int id);
 
-    Job findById(int id);
+
 
     boolean delete(int id);
 

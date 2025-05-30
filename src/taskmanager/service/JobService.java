@@ -32,10 +32,7 @@ public class JobService implements IJobService {
         return jobRepository.checkId(id);
     }
 
-    @Override
-    public Job findById(int id) {
-        return jobRepository.findById(id);
-    }
+
 
 
     @Override

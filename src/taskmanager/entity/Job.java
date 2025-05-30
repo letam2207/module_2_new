@@ -71,5 +71,8 @@ public class Job {
                 "\n Mô tả: " + description +
                 "\n----------------------------";
     }
+    public String getInToFile(){
+        return this.id+","+this.name+","+this.date+","+this.amount+","+this.description;
+    }
 
 }

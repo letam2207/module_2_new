@@ -1,5 +1,6 @@
 package taskmanager.repository;
 
+import taskmanager.common.ReadAndWrite;
 import taskmanager.entity.Job;
 
 import java.util.ArrayList;
@@ -7,28 +8,32 @@ import java.util.List;
 
 public class JobRepository implements IJobRepository {
 
-    private static final List<Job> jobList = new ArrayList<>();
-
-    static {
-        jobList.add(new Job(1, "Tiền mua đồ ăn", "20/03/2025", 2000000, "Mua đồ ăn sáng"));
-        jobList.add(new Job(3, "Trả tiền trọ", "22/1/2025", 500000, "Mua đồ ăn sáng"));
-        jobList.add(new Job(2, "Đóng tiền điện", "12/04/2025", 200000, "Mua đồ ăn sáng"));
-    }
+    private static final String JOB_FILE = "src/taskmanager/data/job.csv";
 
     @Override
     public List<Job> findAll() {
+        List<Job> jobList = new ArrayList<>();
+        List<String> stringList = ReadAndWrite.readFileCSV(JOB_FILE);
+        String[] array;
+        for (int i = 0; i < stringList.size(); i++) {
+            array = stringList.get(i).split(",");
+            Job job = new Job(Integer.parseInt(array[0]), array[1], array[2], Double.parseDouble(array[3]), array[4]);
+            jobList.add(job);
+        }
         return jobList;
     }
 
 
     @Override
     public void add(Job job) {
-        jobList.add(job);
+        List<String> stringList = new ArrayList<>();
+        stringList.add(job.getInToFile());
+        ReadAndWrite.writeFileCSV(JOB_FILE, stringList, true);
     }
 
     @Override
     public boolean checkId(int id) {
-        for (Job job : jobList) {
+        for (Job job : findAll()) {
             if (job.getId() == id) {
                 return true;
             }
@@ -36,41 +41,48 @@ public class JobRepository implements IJobRepository {
         return false;
     }
 
-    @Override
-    public Job findById(int id) {
-        for (Job job : findAll()) {
-            if (job.getId() == id) {
-                return job;
-            }
-        }
-        return null;
-    }
+
 
 
     @Override
     public boolean delete(int id) {
+        List<Job> jobList = findAll();
+        boolean check = false;
         for (int i = 0; i < jobList.size(); i++) {
-            if (jobList.get(i).getId() == id) {
+            if (id == jobList.get(i).getId()) {
+                check = true;
                 jobList.remove(i);
-                return true;
+                break;
             }
         }
-        return false;
+        List<String> stringList = new ArrayList<>();
+        for (Job j : jobList) {
+            stringList.add(j.getInToFile());
+        }
+        ReadAndWrite.writeFileCSV(JOB_FILE, stringList, false);
+        return check;
     }
 
     @Override
     public void updateById(int id, Job job) {
+        List<Job> jobList = findAll();
         for (int i = 0; i < jobList.size(); i++) {
             if (jobList.get(i).getId() == id) {
                 jobList.set(i, job);
-                return;
+                break;
             }
         }
+        List<String> stringList = new ArrayList<>();
+        for (Job j : jobList) {
+            stringList.add(j.getInToFile());
+        }
+        ReadAndWrite.writeFileCSV(JOB_FILE, stringList, false);
     }
 
 
     @Override
     public List<Job> searchId(int id) {
+        List<Job> jobList = findAll();
         List<Job> list = new ArrayList<>();
         for (Job job : jobList) {
             if (job.getId() == id) {
