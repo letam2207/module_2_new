@@ -1,9 +1,10 @@
 package taskmanager.entity;
 
 import javax.print.DocFlavor;
+import java.io.Serializable;
 import java.util.Date;
 
-public class Job {
+public class Job implements Serializable {
     private int id;
     private String name;
     private String date;

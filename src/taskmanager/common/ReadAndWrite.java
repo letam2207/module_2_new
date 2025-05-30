@@ -1,36 +1,34 @@
 package taskmanager.common;
 
+import taskmanager.entity.Job;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReadAndWrite {
-    //phương thức ghi
-    public static void writeFileCSV(String pathFile, List<String> stringList, boolean append){
-        File file = new File(pathFile);
-        try(FileWriter fileWriter = new FileWriter(file, append);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-            for (String line: stringList) {
-                bufferedWriter.write(line);
-                bufferedWriter.newLine();
-            }
-        } catch (IOException e) {
-            System.out.println("lôi đọc file");
+
+    public static void writeFileToBinary(String filePath, List<Job> jobList) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))){
+            oos.writeObject(jobList);
+        }catch (IOException e){
+            System.out.println("Lỗi ghi file nhị phân: " + e.getMessage());
         }
     }
-    // phương thưc đọc
-    public static List<String> readFileCSV(String pathFile){
-        List<String> stringList = new ArrayList<>();
-        File file = new File(pathFile);
-        try(FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader)) {
-            String line="";
-            while ((line=bufferedReader.readLine())!=null){
-                stringList.add(line);
-            }
-        } catch (IOException e) {
-            System.out.println("lôi đọc file");
+
+    public static List<Job> readFileToBinary(String filePath) {
+        List<Job> jobList = new ArrayList<>();
+        File file = new File(filePath);
+        if (!file.exists() || file.length() == 0) {
+            return jobList;
         }
-        return stringList;
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+            jobList = (List<Job>) ois.readObject();
+        } catch (IOException e) {
+            System.out.println("Lỗi đọc file nhị phân: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Lỗi không tìm thấy class: " + e.getMessage());
+        }
+        return jobList;
     }
 }

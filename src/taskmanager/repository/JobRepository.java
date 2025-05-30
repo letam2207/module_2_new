@@ -8,27 +8,18 @@ import java.util.List;
 
 public class JobRepository implements IJobRepository {
 
-    private static final String JOB_FILE = "src/taskmanager/data/job.csv";
+    private static final String JOB_FILE = "src/taskmanager/data/job.dat";
 
     @Override
     public List<Job> findAll() {
-        List<Job> jobList = new ArrayList<>();
-        List<String> stringList = ReadAndWrite.readFileCSV(JOB_FILE);
-        String[] array;
-        for (int i = 0; i < stringList.size(); i++) {
-            array = stringList.get(i).split(",");
-            Job job = new Job(Integer.parseInt(array[0]), array[1], array[2], Double.parseDouble(array[3]), array[4]);
-            jobList.add(job);
-        }
-        return jobList;
+        return ReadAndWrite.readFileToBinary(JOB_FILE);
     }
-
 
     @Override
     public void add(Job job) {
-        List<String> stringList = new ArrayList<>();
-        stringList.add(job.getInToFile());
-        ReadAndWrite.writeFileCSV(JOB_FILE, stringList, true);
+        List<Job> jobList = findAll();
+        jobList.add(job);
+        ReadAndWrite.writeFileToBinary(JOB_FILE, jobList);
     }
 
     @Override
@@ -41,26 +32,14 @@ public class JobRepository implements IJobRepository {
         return false;
     }
 
-
-
-
     @Override
     public boolean delete(int id) {
         List<Job> jobList = findAll();
-        boolean check = false;
-        for (int i = 0; i < jobList.size(); i++) {
-            if (id == jobList.get(i).getId()) {
-                check = true;
-                jobList.remove(i);
-                break;
-            }
+        boolean removed = jobList.removeIf(job -> job.getId() == id);
+        if (removed) {
+            ReadAndWrite.writeFileToBinary(JOB_FILE, jobList);
         }
-        List<String> stringList = new ArrayList<>();
-        for (Job j : jobList) {
-            stringList.add(j.getInToFile());
-        }
-        ReadAndWrite.writeFileCSV(JOB_FILE, stringList, false);
-        return check;
+        return removed;
     }
 
     @Override
@@ -72,38 +51,31 @@ public class JobRepository implements IJobRepository {
                 break;
             }
         }
-        List<String> stringList = new ArrayList<>();
-        for (Job j : jobList) {
-            stringList.add(j.getInToFile());
-        }
-        ReadAndWrite.writeFileCSV(JOB_FILE, stringList, false);
+        ReadAndWrite.writeFileToBinary(JOB_FILE, jobList);
     }
-
 
     @Override
     public List<Job> searchId(int id) {
         List<Job> jobList = findAll();
-        List<Job> list = new ArrayList<>();
+        List<Job> result = new ArrayList<>();
         for (Job job : jobList) {
             if (job.getId() == id) {
-                list.add(job);
+                result.add(job);
             }
         }
-        return list;
+        return result;
     }
 
     @Override
     public List<Job> searchName(String name) {
-        List<Job> jobs = findAll();
-        List<Job> matchedJobs = new ArrayList<>();
-        String searchLower = name.toLowerCase();
-
-        for (Job job : jobs) {
-            if (job.getName().toLowerCase().contains(searchLower)) {
-                matchedJobs.add(job);
+        List<Job> jobList = findAll();
+        List<Job> result = new ArrayList<>();
+        String keyword = name.toLowerCase();
+        for (Job job : jobList) {
+            if (job.getName().toLowerCase().contains(keyword)) {
+                result.add(job);
             }
         }
-        return matchedJobs;
+        return result;
     }
-
 }
