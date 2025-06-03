@@ -34,7 +34,6 @@ public class JobService implements IJobService {
 
 
 
-
     @Override
     public boolean delete(int id) throws IdNotFoundException {
         if (!jobRepository.checkId(id)) {
